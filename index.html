@@ -5,23 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Pasos Cromáticos</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,400;0,700;0,900;1,900&display=swap">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
-:root{--bg:#0b0b0b;--cream:#f6ecd6;--ink:#2b2118;--red:#ff4b4b;--yel:#ffcf33;--grn:#2fd27a;--blu:#3d8bff;--pink:#ff6fa8;
-box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+:root{--bg:#0b0b0b;--ink:#2b2118;--yel:#ffcf33;--grn:#2fd27a;color-scheme:dark}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:#fff;font-family:Outfit,system-ui,sans-serif;
-}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:#fff;font-family:Outfit,system-ui,sans-serif}
 main{max-width:760px;margin:0 auto;padding:20px 16px 60px}
 h1{font-weight:900;font-style:italic;font-size:clamp(40px,11vw,80px);line-height:1;margin:10px 0 0;text-align:center;letter-spacing:-1px}
 h1 .g{color:#9be02b}h1 .l{color:#e0b0f5}
 .sub{text-align:center;color:#cfcfcf;margin:6px 0 18px}
 h2{font-weight:900;font-style:italic;font-size:26px;margin:44px 0 12px;text-transform:uppercase}
-.btn{font:800 18px Outfit,sans-serif;color:#5a3326;background:#fff3ec;border:3px solid #7a4a3a;border-radius:18px;padding:12px 22px;box-shadow:0 5px 0 #c9a79a;cursor:pointer;display:inline-block;text-align:center}
+h2:nth-of-type(1){color:#ffc1d9}h2:nth-of-type(2){color:#9be02b}h2:nth-of-type(3){color:#e0b0f5}h2:nth-of-type(4){color:#7fb2ff}
+.btn{font:800 18px Outfit,sans-serif;color:#5a3326;background:#fff3ec;border:3px solid #7a4a3a;border-radius:18px;padding:12px 22px;box-shadow:0 5px 0 #c9a79a;cursor:pointer;display:inline-block;text-align:center;text-decoration:none}
 .btn:active{transform:translateY(4px);box-shadow:0 1px 0 #c9a79a}
-.btn:disabled{opacity:.5}h2:nth-of-type(1){color:#ffc1d9}h2:nth-of-type(2){color:#9be02b}h2:nth-of-type(3){color:#e0b0f5}h2:nth-of-type(4){color:#7fb2ff}
+.btn:disabled{opacity:.5}
 .menu{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:10px 0}
-details{background:#161616;border:2px solid #333;border-radius:16px;margin:10px 0;padding:0}
+details{background:#161616;border:2px solid #333;border-radius:16px;margin:10px 0}
 summary{cursor:pointer;font-weight:800;padding:14px 18px;font-size:18px;list-style:none}
 summary::before{content:"▸ ";color:var(--yel)}
 details[open] summary::before{content:"▾ "}
@@ -30,20 +31,18 @@ details ul{padding-left:38px}
 .nick{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;margin:14px 0}
 input[type=text]{font:700 17px Outfit,sans-serif;padding:11px 14px;border-radius:14px;border:3px solid #7a4a3a;background:#fff8f2;color:var(--ink);width:210px}
 .cardwrap{display:flex;flex-direction:column;align-items:center;gap:14px}
-.card{width:260px;min-height:380px;border-radius:22px;border:8px solid #fff;display:flex;flex-direction:column;align-items:center;justify-content:space-between;text-align:center;padding:16px 14px;color:#1a1a1a;box-shadow:0 10px 40px #0008;transition:transform .4s}
+.card{width:260px;min-height:380px;border-radius:22px;border:8px solid #fff;display:flex;flex-direction:column;align-items:center;justify-content:space-between;text-align:center;padding:16px 14px;color:#1a1a1a;box-shadow:0 10px 40px #0008}
 .card.flip{animation:flip .5s}
 @keyframes flip{from{transform:rotateY(90deg) scale(.9)}to{transform:none}}
-.card .ct{font-weight:900;font-size:22px;text-transform:uppercase;letter-spacing:2px}.card .co{font-weight:800;font-size:19px;line-height:1.25;background:#ffffff55;border-radius:14px;padding:10px 12px;width:100%}.card .cd{font-weight:700;font-size:16px;line-height:1.4}
+.card .ct{font-weight:900;font-size:22px;text-transform:uppercase;letter-spacing:2px}
+.card .co{font-weight:800;font-size:19px;line-height:1.25;background:#ffffff55;border-radius:14px;padding:10px 12px;width:100%}
+.card .cd{font-weight:700;font-size:16px;line-height:1.4}
 .card .n{font-weight:900;font-style:italic;font-size:120px;line-height:1}
-
-
-.card.empty{justify-content:center;background:#111;border-color:#444;border-style:dashed;color:#777;font-weight:800;text-align:center;padding:20px}
+.card.empty{justify-content:center;background:#111;border-color:#444;border-style:dashed;color:#777;font-weight:800;padding:20px}
 .info{background:#161616;border:2px solid #333;border-radius:16px;padding:14px 18px;width:100%;max-width:460px;line-height:1.55}
-.info b{color:var(--yel)}
-.bar{height:14px;background:#2a2a2a;border-radius:9px;overflow:hidden;margin-top:8px}
+.bar{height:14px;background:#2a2a2a;border-radius:9px;overflow:hidden;margin-bottom:8px}
 .bar i{display:block;height:100%;background:var(--grn);width:0;transition:width .4s}
 #path{width:100%;height:auto;display:block}
-.node{cursor:default}
 .pulse{animation:p 1.4s infinite}
 @keyframes p{50%{opacity:.55}}
 .rank{list-style:none;margin:0;padding:0;display:grid;gap:8px}
@@ -114,6 +113,17 @@ input[type=text]{font:700 17px Outfit,sans-serif;padding:11px 14px;border-radius
 <div id="big"><img alt=""></div>
 
 <script>
+/* ====== 1) PEGÁ ACÁ LOS DATOS DE TU PROYECTO DE FIREBASE ====== */
+var FB={
+ apiKey:"PEGAR_AQUI",
+ authDomain:"PEGAR_AQUI",
+ projectId:"PEGAR_AQUI",
+ storageBucket:"PEGAR_AQUI",
+ messagingSenderId:"PEGAR_AQUI",
+ appId:"PEGAR_AQUI"
+};
+/* ================================================================ */
+
 var COL={rojo:"#ff4b4b",amarillo:"#ffcf33",verde:"#2fd27a",azul:"#3d8bff"};
 var OBJ={
 rojo:["Cosas rojas: carteles, autos o puertas","Algo rojo viejo o gastado","Un detalle rojo muy chiquito"],
@@ -123,12 +133,31 @@ azul:["Edificios o paredes azules","Algo azul que se mueva","Un cielo azul entre
 var LV=[3,6,10,14,19,24,30,36,43,50];
 var $=function(s){return document.querySelector(s)};
 var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
-var S={uid:null,name:"",card:null,got:0,photos:[],col:null};
+var S={uid:null,name:"",card:null,got:0,photos:[],players:{}};
 function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+
+/* conexión a Firebase (si no está configurado, funciona en modo local) */
+var fdb=null;
+try{
+ if(FB.projectId!=="PEGAR_AQUI"&&window.firebase){firebase.initializeApp(FB);fdb=firebase.firestore()}
+}catch(e){fdb=null}
 
 S.uid=ls("d_uid")||("u"+Math.random().toString(36).slice(2,10));ls("d_uid",S.uid);
 S.name=ls("d_name")||"";$("#nick").value=S.name;
 try{S.card=JSON.parse(ls("d_card")||"null");S.got=+ls("d_got")||0}catch(e){}
+
+function rebuildPlayers(){
+ S.players={};
+ S.photos.forEach(function(p){var k=S.players[p.uid]||(S.players[p.uid]={n:0,name:p.name});k.n++;k.name=p.name});
+}
+function saveLocal(){
+ try{localStorage.setItem("d_photos",JSON.stringify(S.photos.slice(0,40)))}
+ catch(e){$("#status").textContent="La memoria del navegador está llena"}
+}
+if(!fdb){
+ try{S.photos=JSON.parse(ls("d_photos")||"[]")}catch(e){S.photos=[]}
+ rebuildPlayers();
+}
 
 $("#saveNick").onclick=function(){S.name=$("#nick").value.trim().slice(0,20);ls("d_name",S.name);$("#status").textContent="Apodo guardado"};
 
@@ -142,7 +171,7 @@ function renderCard(anim){
  if(!k){return}
  el.className="card"+(anim?" flip":"");el.style.background=COL[k.c];el.style.borderStyle="solid";el.style.borderColor="#fff";
  el.innerHTML='<div class="ct">'+k.c+'</div><div class="n">'+k.n+'</div><div class="co">'+(k.o?esc(k.o):"Libre elección: elegí qué fotografiar de este color")+'</div><div class="cd">'+k.n+' cuadras · '+k.n+' fotos<br>Girá a la '+(k.n%2===0?"derecha":"izquierda")+'</div>';
- var par=k.n%2===0,i=$("#info");i.style.display="block";
+ var i=$("#info");i.style.display="block";
  i.innerHTML='<div class="bar"><i style="width:'+Math.min(100,S.got/k.n*100)+'%"></i></div><div class="note">'+Math.min(S.got,k.n)+' / '+k.n+' fotos de esta carta</div>';
  $("#upBtn").disabled=false;
 }
@@ -155,16 +184,20 @@ function resize(f){return new Promise(function(ok,no){
   cv.width=Math.round(im.width*s);cv.height=Math.round(im.height*s);cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);
   ok(cv.toDataURL("image/jpeg",0.6))};im.src=r.result};r.readAsDataURL(f)})}
 
-var col=null;
 $("#file").onchange=async function(e){
  var fs=Array.from(e.target.files);e.target.value="";
  if(!S.card||!fs.length)return;
- if(!S.name){S.name=($("#nick").value.trim()||"Jugador "+S.uid.slice(1,4)).slice(0,20)}
+ if(!S.name){S.name=($("#nick").value.trim()||"Jugador "+S.uid.slice(1,4)).slice(0,20);ls("d_name",S.name)}
  $("#status").textContent="Subiendo...";
  for(var f of fs){
   try{
    var img=await resize(f),doc={uid:S.uid,name:S.name,img:img,color:S.card.c,num:S.card.n,obj:S.card.o||"libre",ts:Date.now()};
-   if(col){await col.add(doc)}else{doc.id="l"+Math.random();S.photos.push(doc);renderAll()}
+   if(fdb){
+    await fdb.collection("photos").add(doc);
+    await fdb.collection("players").doc(S.uid).set({name:S.name,n:firebase.firestore.FieldValue.increment(1)},{merge:true});
+   }else{
+    S.photos.unshift(doc);saveLocal();rebuildPlayers();renderAll();
+   }
    S.got++;ls("d_got",String(S.got));
   }catch(err){$("#status").textContent="No se pudo subir una foto, probá de nuevo";return}
  }
@@ -172,28 +205,26 @@ $("#file").onchange=async function(e){
  renderCard(false);
 };
 
-function mine(){return S.photos.filter(function(p){return p.uid===S.uid}).length}
+function mine(){return (S.players[S.uid]||{}).n||0}
 function renderPath(){
  var svg=$("#path"),rows=6,d="M 80 70",y;
  for(var r=0;r<rows;r++){y=70+r*115;
-  if(r>0){var pr=y-115;d+=(r%2?" A 57 57 0 0 1 520 ":" A 57 57 0 0 0 80 ")+y}
+  if(r>0){d+=(r%2?" A 57 57 0 0 1 520 ":" A 57 57 0 0 0 80 ")+y}
   d+=(r%2?" H 80":" H 520");
  }
  var done=mine(),cur=LV.findIndex(function(t){return done<t});
- var h='<path id="road" d="'+d+'" fill="none" stroke="#f6ecd6" stroke-width="58" stroke-linecap="round" stroke-linejoin="round"/><path d="'+d+'" fill="none" stroke="#2b2118" stroke-width="3" stroke-dasharray="3 12" stroke-linecap="round"/>';
- svg.innerHTML=h;
+ svg.innerHTML='<path id="road" d="'+d+'" fill="none" stroke="#f6ecd6" stroke-width="58" stroke-linecap="round" stroke-linejoin="round"/><path d="'+d+'" fill="none" stroke="#2b2118" stroke-width="3" stroke-dasharray="3 12" stroke-linecap="round"/>';
  var road=svg.querySelector("#road"),L=road.getTotalLength(),n=LV.length,cs=["#ff4b4b","#ffcf33","#2fd27a","#3d8bff"],out="";
  for(var i=0;i<=n;i++){
   var p=road.getPointAtLength(L*(i+0.4)/(n+0.8)),fin=i===n,ok=!fin&&done>=LV[i],isCur=i===cur,
   fill=fin?(cur===-1?"#ffcf33":"#3a3a3a"):(ok?cs[i%4]:"#3a3a3a");
-  out+='<g class="node'+(isCur?" pulse":"")+'"><circle cx="'+p.x+'" cy="'+p.y+'" r="25" fill="'+fill+'" stroke="#2b2118" stroke-width="4"/><text x="'+p.x+'" y="'+(p.y+7)+'" text-anchor="middle" font-family="Outfit,sans-serif" font-weight="900" font-style="italic" font-size="'+(fin?15:20)+'" fill="'+(ok||(fin&&cur===-1)?"#2b2118":"#999")+'">'+(fin?"FIN":i+1)+'</text>'+(isCur?'<text x="'+p.x+'" y="'+(p.y-34)+'" text-anchor="middle" font-family="Outfit,sans-serif" font-weight="800" font-size="13" fill="#ffc1d9">'+(LV[i]-done)+' fotos</text>':"")+'</g>';
+  out+='<g class="'+(isCur?"pulse":"")+'"><circle cx="'+p.x+'" cy="'+p.y+'" r="25" fill="'+fill+'" stroke="#2b2118" stroke-width="4"/><text x="'+p.x+'" y="'+(p.y+7)+'" text-anchor="middle" font-family="Outfit,sans-serif" font-weight="900" font-style="italic" font-size="'+(fin?15:20)+'" fill="'+(ok||(fin&&cur===-1)?"#2b2118":"#999")+'">'+(fin?"FIN":i+1)+'</text>'+(isCur?'<text x="'+p.x+'" y="'+(p.y-34)+'" text-anchor="middle" font-family="Outfit,sans-serif" font-weight="800" font-size="13" fill="#ffc1d9">'+(LV[i]-done)+' fotos</text>':"")+'</g>';
  }
  svg.insertAdjacentHTML("beforeend",out);
  $("#lvlNote").textContent=cur===-1?"¡Llegaste al final del camino!":"Tenés "+done+" fotos. Nivel "+(cur+1)+" de "+n+": faltan "+(LV[cur]-done)+".";
 }
 function renderRank(){
- var m={};S.photos.forEach(function(p){var k=m[p.uid]||(m[p.uid]={n:0,name:p.name});k.n++;k.name=p.name});
- var a=Object.keys(m).map(function(k){return{id:k,n:m[k].n,name:m[k].name}}).sort(function(a,b){return b.n-a.n}).slice(0,10);
+ var a=Object.keys(S.players).map(function(k){return{id:k,n:S.players[k].n||0,name:S.players[k].name}}).filter(function(x){return x.n>0}).sort(function(a,b){return b.n-a.n}).slice(0,10);
  $("#rank").innerHTML=a.length?a.map(function(x,i){return'<li><span class="pos">'+(i+1)+'</span><span class="nm">'+esc(x.name||"Jugador")+(x.id===S.uid?" (vos)":"")+'</span><span>'+x.n+' fotos</span></li>'}).join(""):'<li><span class="nm">Todavía no hay fotos. ¡Sé la primera persona!</span></li>';
 }
 function renderGal(){
@@ -206,17 +237,16 @@ function renderAll(){renderPath();renderRank();renderGal()}
 
 renderAll();if(S.card)renderCard(false);
 
-(async function(){
- try{
-  if(!window.claude)throw 0;
-  var t=setTimeout(function(){$("#status").textContent="Modo local: las fotos no se comparten todavía"},10000);
-  var u=await claude.use("user");if(u&&u.id){try{S.uid=await u.id();ls("d_uid",S.uid)}catch(e){}}
-  var db=await claude.use("db");clearTimeout(t);
-  if(!db){$("#status").textContent="Modo local: las fotos no se comparten todavía";return}
-  col=db.collection("photos");
-  col.onSnapshot(function(s){S.photos=s.docs.map(function(d){var x=d.data();x.id=d.id;return x});renderAll()},function(){$("#status").textContent="No pude leer las fotos compartidas"});
- }catch(e){$("#status").textContent="Modo local: las fotos no se comparten todavía"}
-})();
+if(fdb){
+ fdb.collection("photos").orderBy("ts","desc").limit(60).onSnapshot(function(s){
+  S.photos=s.docs.map(function(d){return d.data()});renderAll();
+ },function(){$("#status").textContent="No pude leer las fotos compartidas (revisá las reglas de Firebase)"});
+ fdb.collection("players").onSnapshot(function(s){
+  S.players={};s.docs.forEach(function(d){S.players[d.id]=d.data()});renderAll();
+ },function(){$("#status").textContent="No pude leer el ranking (revisá las reglas de Firebase)"});
+}else{
+ $("#status").textContent="Modo local: falta configurar Firebase, las fotos no se comparten";
+}
 </script>
 </body>
 </html>
