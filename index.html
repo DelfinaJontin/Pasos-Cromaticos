@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pasos Cromáticos</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,400;0,700;0,900;1,900&display=swap">
+<style>
+:root{--bg:#0b0b0b;--cream:#f6ecd6;--ink:#2b2118;--red:#ff4b4b;--yel:#ffcf33;--grn:#2fd27a;--blu:#3d8bff;--pink:#ff6fa8;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:#fff;font-family:Outfit,system-ui,sans-serif;
+}
+main{max-width:760px;margin:0 auto;padding:20px 16px 60px}
+h1{font-weight:900;font-style:italic;font-size:clamp(40px,11vw,80px);line-height:1;margin:10px 0 0;text-align:center;letter-spacing:-1px}
+h1 .g{color:#9be02b}h1 .l{color:#e0b0f5}
+.sub{text-align:center;color:#cfcfcf;margin:6px 0 18px}
+h2{font-weight:900;font-style:italic;font-size:26px;margin:44px 0 12px;text-transform:uppercase}
+.btn{font:800 18px Outfit,sans-serif;color:#5a3326;background:#fff3ec;border:3px solid #7a4a3a;border-radius:18px;padding:12px 22px;box-shadow:0 5px 0 #c9a79a;cursor:pointer;display:inline-block;text-align:center}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #c9a79a}
+.btn:disabled{opacity:.5}h2:nth-of-type(1){color:#ffc1d9}h2:nth-of-type(2){color:#9be02b}h2:nth-of-type(3){color:#e0b0f5}h2:nth-of-type(4){color:#7fb2ff}
+.menu{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:10px 0}
+details{background:#161616;border:2px solid #333;border-radius:16px;margin:10px 0;padding:0}
+summary{cursor:pointer;font-weight:800;padding:14px 18px;font-size:18px;list-style:none}
+summary::before{content:"▸ ";color:var(--yel)}
+details[open] summary::before{content:"▾ "}
+details p,details ul{margin:0;padding:0 18px 16px 18px;line-height:1.5;color:#ddd}
+details ul{padding-left:38px}
+.nick{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;margin:14px 0}
+input[type=text]{font:700 17px Outfit,sans-serif;padding:11px 14px;border-radius:14px;border:3px solid #7a4a3a;background:#fff8f2;color:var(--ink);width:210px}
+.cardwrap{display:flex;flex-direction:column;align-items:center;gap:14px}
+.card{width:260px;min-height:380px;border-radius:22px;border:8px solid #fff;display:flex;flex-direction:column;align-items:center;justify-content:space-between;text-align:center;padding:16px 14px;color:#1a1a1a;box-shadow:0 10px 40px #0008;transition:transform .4s}
+.card.flip{animation:flip .5s}
+@keyframes flip{from{transform:rotateY(90deg) scale(.9)}to{transform:none}}
+.card .ct{font-weight:900;font-size:22px;text-transform:uppercase;letter-spacing:2px}.card .co{font-weight:800;font-size:19px;line-height:1.25;background:#ffffff55;border-radius:14px;padding:10px 12px;width:100%}.card .cd{font-weight:700;font-size:16px;line-height:1.4}
+.card .n{font-weight:900;font-style:italic;font-size:120px;line-height:1}
+
+
+.card.empty{justify-content:center;background:#111;border-color:#444;border-style:dashed;color:#777;font-weight:800;text-align:center;padding:20px}
+.info{background:#161616;border:2px solid #333;border-radius:16px;padding:14px 18px;width:100%;max-width:460px;line-height:1.55}
+.info b{color:var(--yel)}
+.bar{height:14px;background:#2a2a2a;border-radius:9px;overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:var(--grn);width:0;transition:width .4s}
+#path{width:100%;height:auto;display:block}
+.node{cursor:default}
+.pulse{animation:p 1.4s infinite}
+@keyframes p{50%{opacity:.55}}
+.rank{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.rank li{display:flex;align-items:center;gap:12px;background:#161616;border:2px solid #333;border-radius:14px;padding:10px 14px;font-weight:800}
+.rank li:nth-child(1){border-color:var(--yel)}
+.rank .pos{font-style:italic;font-weight:900;font-size:24px;color:#ffc1d9;width:34px}
+.rank .nm{flex:1;overflow:hidden;text-overflow:ellipsis}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.gal figure{margin:0;border-radius:14px;overflow:hidden;border:4px solid;background:#161616;cursor:pointer}
+.gal img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.gal figcaption{font-size:12px;padding:6px 8px;color:#ddd}
+#big{position:fixed;inset:0;background:#000d;display:none;align-items:center;justify-content:center;z-index:9;padding:16px}
+#big img{max-width:100%;max-height:100%;border-radius:12px}
+.note{color:#aaa;font-size:14px;text-align:center}
+</style>
+</head>
+<body>
+<main>
+<h1><span class="g">PASOS</span><br><span class="l">CROMÁTICOS</span></h1>
+<p class="sub">Caminá la ciudad con un mazo de cartas. Sacá fotos, subí de nivel.</p>
+
+<div class="menu">
+<a class="btn" href="#cartas">sacar carta</a>
+<a class="btn" href="#camino">el camino</a>
+<a class="btn" href="#ranking">ranking</a>
+<a class="btn" href="#galeria">galería</a>
+</div>
+
+<details open><summary>¿Cómo se juega?</summary>
+<ul>
+<li>Sacá una carta del mazo.</li>
+<li><b>El color</b> te dice a qué color prestarle atención mientras caminás.</li>
+<li><b>El número</b> son las cuadras que caminás y las fotos que tenés que sacar.</li>
+<li>Número <b>par</b>: girás a la <b>derecha</b>. Número <b>impar</b>: a la <b>izquierda</b>.</li>
+<li>Algunas cartas traen un objetivo (por ejemplo "edificios azules"); otras son de libre elección.</li>
+<li>Subí tus fotos en la página: avanzás por el camino y sumás puntos en el ranking.</li>
+</ul></details>
+<details><summary>Niveles y ranking</summary>
+<p>El camino tiene 10 niveles y el juego termina cuando juntás 50 fotos. Las fotos son públicas: todos las ven en la galería y el top 10 muestra quién sacó más.</p></details>
+
+<div class="nick">
+<input type="text" id="nick" maxlength="20" placeholder="tu apodo de jugador">
+<button class="btn" id="saveNick">guardar</button>
+</div>
+
+<h2 id="cartas">Tu carta</h2>
+<div class="cardwrap">
+<div class="card empty" id="card">Tocá "nueva carta" para empezar la deriva</div>
+<div class="info" id="info" style="display:none"></div>
+<div class="menu">
+<button class="btn" id="draw">nueva carta</button>
+<button class="btn" id="upBtn" disabled>subir foto</button>
+</div>
+<input type="file" id="file" accept="image/*" multiple hidden>
+<div class="note" id="status"></div>
+</div>
+
+<h2 id="camino">El camino</h2>
+<svg id="path" viewBox="0 0 600 720" role="img" aria-label="Camino de niveles"></svg>
+<p class="note" id="lvlNote"></p>
+
+<h2 id="ranking">Top 10</h2>
+<ol class="rank" id="rank"></ol>
+
+<h2 id="galeria">Galería pública</h2>
+<div class="gal" id="gal"></div>
+</main>
+<div id="big"><img alt=""></div>
+
+<script>
+var COL={rojo:"#ff4b4b",amarillo:"#ffcf33",verde:"#2fd27a",azul:"#3d8bff"};
+var OBJ={
+rojo:["Cosas rojas: carteles, autos o puertas","Algo rojo viejo o gastado","Un detalle rojo muy chiquito"],
+amarillo:["Cosas amarillas: flores, pintura o señales","Algo amarillo en el piso","Un amarillo que no esperabas"],
+verde:["Plantas y árboles de la cuadra","Algo verde hecho por humanos","Un verde que se cuela entre el cemento"],
+azul:["Edificios o paredes azules","Algo azul que se mueva","Un cielo azul entre cables"]};
+var LV=[3,6,10,14,19,24,30,36,43,50];
+var $=function(s){return document.querySelector(s)};
+var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
+var S={uid:null,name:"",card:null,got:0,photos:[],col:null};
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+
+S.uid=ls("d_uid")||("u"+Math.random().toString(36).slice(2,10));ls("d_uid",S.uid);
+S.name=ls("d_name")||"";$("#nick").value=S.name;
+try{S.card=JSON.parse(ls("d_card")||"null");S.got=+ls("d_got")||0}catch(e){}
+
+$("#saveNick").onclick=function(){S.name=$("#nick").value.trim().slice(0,20);ls("d_name",S.name);$("#status").textContent="Apodo guardado"};
+
+function newCard(){
+ var cs=Object.keys(COL),c=cs[Math.floor(Math.random()*4)],n=1+Math.floor(Math.random()*9);
+ var libre=Math.random()<0.4,o=libre?null:OBJ[c][Math.floor(Math.random()*3)];
+ S.card={c:c,n:n,o:o};S.got=0;ls("d_card",JSON.stringify(S.card));ls("d_got","0");renderCard(true);
+}
+function renderCard(anim){
+ var el=$("#card"),k=S.card;
+ if(!k){return}
+ el.className="card"+(anim?" flip":"");el.style.background=COL[k.c];el.style.borderStyle="solid";el.style.borderColor="#fff";
+ el.innerHTML='<div class="ct">'+k.c+'</div><div class="n">'+k.n+'</div><div class="co">'+(k.o?esc(k.o):"Libre elección: elegí qué fotografiar de este color")+'</div><div class="cd">'+k.n+' cuadras · '+k.n+' fotos<br>Girá a la '+(k.n%2===0?"derecha":"izquierda")+'</div>';
+ var par=k.n%2===0,i=$("#info");i.style.display="block";
+ i.innerHTML='<div class="bar"><i style="width:'+Math.min(100,S.got/k.n*100)+'%"></i></div><div class="note">'+Math.min(S.got,k.n)+' / '+k.n+' fotos de esta carta</div>';
+ $("#upBtn").disabled=false;
+}
+$("#draw").onclick=newCard;
+$("#upBtn").onclick=function(){$("#file").click()};
+
+function resize(f){return new Promise(function(ok,no){
+ var r=new FileReader();r.onerror=no;r.onload=function(){var im=new Image();im.onerror=no;im.onload=function(){
+  var m=640,s=Math.min(1,m/Math.max(im.width,im.height)),cv=document.createElement("canvas");
+  cv.width=Math.round(im.width*s);cv.height=Math.round(im.height*s);cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);
+  ok(cv.toDataURL("image/jpeg",0.6))};im.src=r.result};r.readAsDataURL(f)})}
+
+var col=null;
+$("#file").onchange=async function(e){
+ var fs=Array.from(e.target.files);e.target.value="";
+ if(!S.card||!fs.length)return;
+ if(!S.name){S.name=($("#nick").value.trim()||"Jugador "+S.uid.slice(1,4)).slice(0,20)}
+ $("#status").textContent="Subiendo...";
+ for(var f of fs){
+  try{
+   var img=await resize(f),doc={uid:S.uid,name:S.name,img:img,color:S.card.c,num:S.card.n,obj:S.card.o||"libre",ts:Date.now()};
+   if(col){await col.add(doc)}else{doc.id="l"+Math.random();S.photos.push(doc);renderAll()}
+   S.got++;ls("d_got",String(S.got));
+  }catch(err){$("#status").textContent="No se pudo subir una foto, probá de nuevo";return}
+ }
+ $("#status").textContent=S.got>=S.card.n?"¡Carta completa! Podés sacar otra.":"Foto subida";
+ renderCard(false);
+};
+
+function mine(){return S.photos.filter(function(p){return p.uid===S.uid}).length}
+function renderPath(){
+ var svg=$("#path"),rows=6,d="M 80 70",y;
+ for(var r=0;r<rows;r++){y=70+r*115;
+  if(r>0){var pr=y-115;d+=(r%2?" A 57 57 0 0 1 520 ":" A 57 57 0 0 0 80 ")+y}
+  d+=(r%2?" H 80":" H 520");
+ }
+ var done=mine(),cur=LV.findIndex(function(t){return done<t});
+ var h='<path id="road" d="'+d+'" fill="none" stroke="#f6ecd6" stroke-width="58" stroke-linecap="round" stroke-linejoin="round"/><path d="'+d+'" fill="none" stroke="#2b2118" stroke-width="3" stroke-dasharray="3 12" stroke-linecap="round"/>';
+ svg.innerHTML=h;
+ var road=svg.querySelector("#road"),L=road.getTotalLength(),n=LV.length,cs=["#ff4b4b","#ffcf33","#2fd27a","#3d8bff"],out="";
+ for(var i=0;i<=n;i++){
+  var p=road.getPointAtLength(L*(i+0.4)/(n+0.8)),fin=i===n,ok=!fin&&done>=LV[i],isCur=i===cur,
+  fill=fin?(cur===-1?"#ffcf33":"#3a3a3a"):(ok?cs[i%4]:"#3a3a3a");
+  out+='<g class="node'+(isCur?" pulse":"")+'"><circle cx="'+p.x+'" cy="'+p.y+'" r="25" fill="'+fill+'" stroke="#2b2118" stroke-width="4"/><text x="'+p.x+'" y="'+(p.y+7)+'" text-anchor="middle" font-family="Outfit,sans-serif" font-weight="900" font-style="italic" font-size="'+(fin?15:20)+'" fill="'+(ok||(fin&&cur===-1)?"#2b2118":"#999")+'">'+(fin?"FIN":i+1)+'</text>'+(isCur?'<text x="'+p.x+'" y="'+(p.y-34)+'" text-anchor="middle" font-family="Outfit,sans-serif" font-weight="800" font-size="13" fill="#ffc1d9">'+(LV[i]-done)+' fotos</text>':"")+'</g>';
+ }
+ svg.insertAdjacentHTML("beforeend",out);
+ $("#lvlNote").textContent=cur===-1?"¡Llegaste al final del camino!":"Tenés "+done+" fotos. Nivel "+(cur+1)+" de "+n+": faltan "+(LV[cur]-done)+".";
+}
+function renderRank(){
+ var m={};S.photos.forEach(function(p){var k=m[p.uid]||(m[p.uid]={n:0,name:p.name});k.n++;k.name=p.name});
+ var a=Object.keys(m).map(function(k){return{id:k,n:m[k].n,name:m[k].name}}).sort(function(a,b){return b.n-a.n}).slice(0,10);
+ $("#rank").innerHTML=a.length?a.map(function(x,i){return'<li><span class="pos">'+(i+1)+'</span><span class="nm">'+esc(x.name||"Jugador")+(x.id===S.uid?" (vos)":"")+'</span><span>'+x.n+' fotos</span></li>'}).join(""):'<li><span class="nm">Todavía no hay fotos. ¡Sé la primera persona!</span></li>';
+}
+function renderGal(){
+ var a=S.photos.filter(function(p){return typeof p.img==="string"&&p.img.indexOf("data:image/jpeg")===0}).sort(function(a,b){return b.ts-a.ts}).slice(0,60);
+ $("#gal").innerHTML=a.length?a.map(function(p){var c=COL[p.color]||"#fff";return'<figure style="border-color:'+c+'" data-s="'+p.img+'"><img loading="lazy" src="'+p.img+'" alt="foto"><figcaption><b>'+esc(p.name||"Jugador")+'</b> · '+esc(p.color)+' '+(+p.num||"")+'</figcaption></figure>'}).join(""):'<p class="note">Acá van a aparecer las fotos de todos los jugadores.</p>';
+}
+$("#gal").onclick=function(e){var f=e.target.closest("figure");if(!f)return;$("#big img").src=f.dataset.s;$("#big").style.display="flex"};
+$("#big").onclick=function(){this.style.display="none"};
+function renderAll(){renderPath();renderRank();renderGal()}
+
+renderAll();if(S.card)renderCard(false);
+
+(async function(){
+ try{
+  if(!window.claude)throw 0;
+  var t=setTimeout(function(){$("#status").textContent="Modo local: las fotos no se comparten todavía"},10000);
+  var u=await claude.use("user");if(u&&u.id){try{S.uid=await u.id();ls("d_uid",S.uid)}catch(e){}}
+  var db=await claude.use("db");clearTimeout(t);
+  if(!db){$("#status").textContent="Modo local: las fotos no se comparten todavía";return}
+  col=db.collection("photos");
+  col.onSnapshot(function(s){S.photos=s.docs.map(function(d){var x=d.data();x.id=d.id;return x});renderAll()},function(){$("#status").textContent="No pude leer las fotos compartidas"});
+ }catch(e){$("#status").textContent="Modo local: las fotos no se comparten todavía"}
+})();
+</script>
+</body>
+</html>
